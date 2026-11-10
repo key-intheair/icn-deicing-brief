@@ -58,20 +58,21 @@ p{ margin:0; }
 .hero .lede{ color:var(--ink-2); font-size:16px; max-width:62ch; }
 
 /* tabs */
-.tabs{ display:flex; gap:28px; margin:26px 0 0; border-bottom:1px solid var(--divider); overflow-x:auto; scrollbar-width:none; }
-.tabs::-webkit-scrollbar{ display:none; }
-.tab{ appearance:none; background:none; border:0; padding:10px 0 12px; font:inherit; font-size:17px; color:var(--ink-2);
-  cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; margin-bottom:-1px; }
-.tab:hover{ color:var(--ink); }
-.tab[aria-selected="true"]{ color:var(--ink); font-weight:700; border-bottom-color:var(--accent); }
-/* 모바일: 탭 3x2 배열 */
-@media (max-width:560px){
-  .tabs{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:0 14px; border-bottom:0; overflow:visible; }
-  .tab{ text-align:left; margin-bottom:0; padding:11px 0 12px; font-size:16px; border-bottom:1px solid var(--divider); }
-  .tab[aria-selected="true"]{ padding-bottom:11px; border-bottom:2px solid var(--accent); }
+/* 메뉴: 테두리·음영이 있는 버튼 6개 (PC 한 줄, 휴대폰 3x2, 아주 좁으면 2x3) */
+.tabs{ display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:8px; margin:26px 0 0; }
+.tab{ appearance:none; font:inherit; font-size:15.5px; line-height:1.25; color:var(--ink-2); cursor:pointer;
+  background:var(--surface); border:1px solid var(--divider); border-radius:4px; padding:10px 8px; min-height:58px;
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  box-shadow:0 1px 2px color-mix(in srgb, var(--ink) 10%, transparent); transition:border-color .15s, background-color .15s; }
+.tab:hover{ border-color:var(--accent); color:var(--ink); }
+.tab[aria-selected="true"]{ background:var(--accent); border-color:var(--accent); color:var(--on-accent); font-weight:700;
+  box-shadow:0 3px 8px color-mix(in srgb, var(--accent) 35%, transparent); }
+@media (max-width:760px){
+  .tabs{ grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px; }
+  .tab{ font-size:13.5px; min-height:52px; padding:8px 3px; letter-spacing:-.01em; }
 }
-/* 아주 좁은 화면: 2x3 */
-@media (max-width:359px){ .tabs{ grid-template-columns:1fr 1fr; gap:0 20px; } }
+@media (max-width:359px){ .tabs{ grid-template-columns:1fr 1fr; } }
+@media (prefers-reduced-motion:reduce){ .tab{ transition:none; } }
 .panel{ padding-top:32px; }
 
 /* shared text */
@@ -253,8 +254,8 @@ footer{ margin-top:56px; padding-top:16px; border-top:1px solid var(--divider); 
   <nav class="tabs" role="tablist" id="tablist">
     <button class="tab" role="tab" id="t-general" aria-controls="general" data-b="general.tab"></button>
     <button class="tab" role="tab" id="t-frequency" aria-controls="frequency" data-b="zones.tab"></button>
-    <button class="tab" role="tab" id="t-procedure" aria-controls="procedure" data-b="procedure.tab"></button>
     <button class="tab" role="tab" id="t-phraseology" aria-controls="phraseology" data-b="phraseology.tab"></button>
+    <button class="tab" role="tab" id="t-procedure" aria-controls="procedure" data-b="procedure.tab"></button>
     <button class="tab" role="tab" id="t-emb" aria-controls="emb" data-b="cdZone.tab"></button>
     <button class="tab" role="tab" id="t-safety" aria-controls="safety" data-b="safety.tab"></button>
   </nav>
@@ -377,7 +378,7 @@ window.BOOKLET = {
     // ── Stopping on the Pad ──
     stop: {
       kicker: 'Stop Position',
-      title: 'Stopping on the Pad',
+      title: 'Stopping on the Pad : Refer to pilot\'s stop line',
       text: 'Stop when the **pilot\'s stop line** is aligned with the captain\'s shoulder. Every de-icing pad has this marking, so you can stop without a marshaller; the horizontal bar shows the cockpit stop position.',
       caution: 'Engine thrust must **not exceed GND idle** on the de-icing pad.',
       // 정지 위치 그림 (웹 · 인쇄 모두). 그림을 바꾸려면 같은 이름으로 덮어쓰기
@@ -388,7 +389,7 @@ window.BOOKLET = {
 
   // ══ 02 Zones & Frequencies ════════════════════════════════
   zones: {
-    tab: 'Frequency',
+    tab: 'Check your\nFrequency',   // \n = 메뉴에서 두 줄로
     printKicker: 'Zones & Frequencies',
     printTitle: 'De-icing Zones & Frequencies',
 
@@ -570,7 +571,7 @@ window.BOOKLET = {
   },
   // ══ CD Zone & EMB (웹: EMB 탭 · 인쇄: 5면 단독) ═══════
   cdZone: {
-    tab: 'EMB',
+    tab: 'Smart Deicing\nEMB',
     kicker: 'Central De-icing',
     title: 'CD Zone & EMB',
     titleSub: 'Electronic Message Board',
@@ -594,7 +595,7 @@ window.BOOKLET = {
 
   // ══ 03 De-icing Procedure ═════════════════════════════════
   procedure: {
-    tab: 'Procedure',
+    tab: 'Procedure\nFlow',
     hint: 'ENG ON is standard. ENG OFF may apply for safety or ground-handler reasons.',
     printKicker: 'Procedure',
     printTitle: 'De-icing Procedure',
@@ -691,9 +692,11 @@ window.BOOKLET = {
         { who: 'PAD CONTROL', say: '(C/S), contact ICEMAN 130.85.' },
       ]},
       { title: '② Request and treatment check', between: 'Flight Crew ↔ ICEMAN', lines: [
-        { who: 'PILOT',  say: 'ICE MAN, (C/S), de-icing pad #834, parking brake set, request ENG ON deicing, Type 1 & Type 4, wings and tail deicing.' },
-        { who: 'ICEMAN', say: '(C/S), ICE MAN, roger, Type 1 & Type 4, wings & tail, ENG ON deicing, engine set to ground idle, report ready for deicing.' },
-        { who: 'PILOT',  say: 'Engine set to ground idle and report ready for deicing, (C/S).', then: 'ICE MAN, (C/S), now ready for deicing.' },
+        { who: 'PILOT',  say: 'ICE MAN, (C/S), de-icing pad #834, parking brake set, request ENG ON deicing.' },
+        { who: 'ICEMAN', say: '(C/S), ICE MAN, roger, ENG ON deicing, engine set to ground idle, report ready for deicing.' },
+        { who: 'PILOT',  say: 'Engine set to ground idle and report ready for deicing, (C/S).' },
+        { who: 'PILOT',  say: 'ICE MAN, (C/S), now ready for deicing. Request Type 1 & Type 4, wings and tail deicing.' },
+        { who: 'ICEMAN', say: '(C/S), roger, Type 1 & Type 4, wings and tail deicing.' },
         { who: 'ICEMAN', say: '(C/S), Standby (to deice).', then: '(C/S), deicing starts now, contact delivery 121.6 (or obtain clearance via PDC), monitor ice man frequency.',
           caution: 'PDC REQUEST MUST INCLUDE ENG ON / ENG OFF DE-ICING AND DE-ICING STATUS (STARTED / COMPLETE). OTHERWISE PDC IS NOT ISSUED.' },
       ], note: 'The stop position may be adjusted to the stop line. If ENG ON is not possible, ENG OFF applies.' },
@@ -724,9 +727,11 @@ window.BOOKLET = {
         { who: 'PAD CONTROL', say: '(C/S), contact ICEMAN 130.85.' },
       ]},
       { title: '② Request and treatment check', between: 'Flight Crew ↔ ICEMAN', lines: [
-        { who: 'PILOT',  say: 'ICE MAN, (C/S), de-icing pad #834, parking brake set, request Type 1 & Type 4, wings and tail deicing, ENG SHUT DOWN deicing.' },
-        { who: 'ICEMAN', say: '(C/S), ICE MAN, roger, Type 1 & Type 4, wings & tail, shut down engines now, report ready for deicing.' },
-        { who: 'PILOT',  say: 'Shut down engines now, report ready for deicing, (C/S).', then: 'ICE MAN, (C/S), now ready for deicing.' },
+        { who: 'PILOT',  say: 'ICE MAN, (C/S), de-icing pad #834, parking brake set, request ENG SHUT DOWN deicing.' },
+        { who: 'ICEMAN', say: '(C/S), ICE MAN, roger, ENG SHUT DOWN deicing, shut down engines now, report ready for deicing.' },
+        { who: 'PILOT',  say: 'Shut down engines now, report ready for deicing, (C/S).' },
+        { who: 'PILOT',  say: 'ICE MAN, (C/S), now ready for deicing. Request Type 1 & Type 4, wings and tail deicing.' },
+        { who: 'ICEMAN', say: '(C/S), roger, Type 1 & Type 4, wings and tail deicing.' },
         { who: 'ICEMAN', say: '(C/S), Standby (to deice).', then: '(C/S), ICEMAN, deicing starts now.' },
       ], caution: 'DO NOT SHUT DOWN ENGINES UNTIL INSTRUCTED BY ICE MAN.' },
       { title: '③ Completion and anti-icing code', between: 'Flight Crew ↔ ICEMAN', lines: [
@@ -755,7 +760,7 @@ window.BOOKLET = {
 
   // ══ 08 Safety Key Points ══════════════════════════════════
   safety: {
-    tab: 'Safety',
+    tab: 'Notice',
     kicker: 'Key Points',
     title: 'Safety Key Points',
     printKicker: 'Key Points',
@@ -865,7 +870,10 @@ window.BOOKLET = {
   // data-b: 구역별 항목 (예: general.tab)
   document.querySelectorAll('[data-b]').forEach(function(el){
     var v = el.dataset.b.split('.').reduce(function(o, k){ return o && o[k]; }, B);
-    if (v != null) el.textContent = v;
+    if (v == null) return;
+    // 메뉴 이름의 \n 은 두 줄로, 다른 곳에서는 띄어쓰기로
+    if (el.classList.contains('tab')) el.innerHTML = esc(v).replace(/\n/g, '<br>');
+    else el.textContent = String(v).replace(/\n/g, ' ');
   });
   $('tablist').setAttribute('aria-label', U.docTitle);
   $('hero-yr').textContent = M.season + ' ' + M.seasonLabel + ' · ' + M.subtitle;
@@ -1125,7 +1133,7 @@ window.BOOKLET = {
   document.querySelectorAll('[data-mode]').forEach(function(b){ b.addEventListener('click', function(){ setMode(b.dataset.mode); }); });
 
   /* ---------- Tabs ---------- */
-  var IDS = ['general','frequency','procedure','phraseology','emb','safety'];
+  var IDS = ['general','frequency','phraseology','procedure','emb','safety'];
   var ALIAS = { zones: 'frequency' };   // 예전 #zones 링크는 Frequency 로
   function show(id, push){
     if (IDS.indexOf(id) < 0) id = 'general';
