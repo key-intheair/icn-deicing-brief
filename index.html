@@ -205,6 +205,10 @@ figcaption{ font-size:13px; color:var(--muted); }
 /* 대체 교신 상자 (EMB 패드 등): 점선 테두리 + 연한 바탕 */
 .alt{ display:flex; flex-direction:column; gap:8px; border:1px dashed var(--emb); border-radius:6px; padding:10px 12px 12px; background:var(--emb-soft); }   /* EMB 박스: 노란빛 */
 .alt-h{ font-size:13.5px; color:var(--emb-ink); line-height:1.45; }
+/* 교신 말풍선 옆 EMB 화면 그림 */
+.mrow.withscr{ justify-content:space-between; align-items:center; gap:12px; }
+.mrow.withscr .scr{ width:150px; margin-left:clamp(0px, 6%, 90px); }
+@media (max-width:640px){ .mrow.withscr .scr{ width:116px; margin-left:0; } }
 
 /* contact */
 /* EMB 화면 설명 (CD Zone 메뉴) — 화면은 실제 EMB처럼 검은 바탕 + 노란 글씨 + 왼쪽 신호등 2개 */
@@ -215,28 +219,34 @@ figcaption{ font-size:13px; color:var(--muted); }
 .embrow .shots{ display:flex; gap:8px; }
 .embrow .desc p{ margin:3px 0 0; color:var(--ink-2); line-height:1.55; }
 .embrow .dt{ font-size:16px; }
-.scr{ position:relative; width:160px; height:92px; flex:0 0 auto; background:#0a0a0a; border-radius:4px; color:#ffd21a;
-  font:700 17px/1.12 "Segoe UI","Apple SD Gothic Neo",Arial,sans-serif; letter-spacing:.02em; display:flex; align-items:center; justify-content:center; padding:4px 6px 4px 28px; text-align:center;
+/* EMB 화면: 실제 EMB 비율(가로:세로 = 2:1) 고정. 글자·신호등 크기는 화면 너비 기준(cqw)이라 크기를 바꿔도 비율 유지 */
+.scr{ --y:#f3e03b; container-type:inline-size; position:relative; flex:0 0 auto; width:180px; aspect-ratio:2/1; background:#000; border-radius:2px; color:var(--y); overflow:hidden;
+  font-family:"Segoe UI","Malgun Gothic","Apple SD Gothic Neo",Arial,sans-serif; font-weight:700; text-align:center;
   box-shadow:0 1px 3px rgba(0,0,0,.25); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-.scr .tx{ display:flex; flex-direction:column; align-items:center; white-space:pre; }
-.scr .ln.red{ color:#ff2b2b; font-size:1.35em; font-weight:600; }
-.scr.sm{ font-size:12.5px; line-height:1.2; }
-.scr.bg{ font-size:20px; }
-.scr .lt{ position:absolute; left:7px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:4px; }
-.scr .lt i{ display:block; width:15px; height:15px; border-radius:50%; background:#20a53a; }
-.scr .lt.r i{ background:#f01e23; }
-.scr.has-gd{ align-items:flex-start; padding-top:8px; }
-.scr .gd{ position:absolute; left:28px; right:10px; bottom:12px; height:22px; display:flex; align-items:center; color:#ffd21a; }
-.scr .gd .pl{ width:20px; height:20px; flex:0 0 auto; }
-.scr .gd .bar{ flex:1; height:4px; background:#ffd21a; margin-left:2px; }
-.scr .gd .end{ width:5px; height:22px; background:#ffd21a; border-radius:1px; }
+.scr .lt{ position:absolute; left:0; display:flex; flex-direction:column; }   /* 신호등: 빨강은 왼쪽 위, 초록은 왼쪽 아래 */
+.scr .lt.r{ top:0; } .scr .lt.g{ bottom:0; }
+.scr .lt i{ display:block; width:12cqw; height:12cqw; border-radius:50%; background:#1f9a33; }
+.scr .lt i + i{ margin-top:-1cqw; }
+.scr .lt.r i{ background:#ff1a1a; }
+.scr .tx{ position:absolute; left:14cqw; right:3cqw; top:0; bottom:0; display:flex; flex-direction:column; justify-content:center; align-items:center; white-space:pre; line-height:1.12; font-size:10cqw; }
+.scr.n2 .tx{ font-size:14cqw; line-height:1.15; }
+.scr.n4 .tx{ font-size:8.3cqw; line-height:1.15; }
+.scr .ln.red{ color:#ff2626; font-size:1.6em; line-height:1.05; font-weight:600; }
+.scr.has-gd .tx{ justify-content:flex-start; padding-top:4cqw; font-size:15cqw; }
+.scr.has-gd .ln.red{ font-size:1.05em; }
+.scr .gd{ position:absolute; left:15cqw; right:3cqw; bottom:5cqw; height:20cqw; display:flex; align-items:center; color:var(--y); }
+.scr .gd .pl{ width:11cqw; height:11cqw; flex:0 0 auto; }
+.scr .gd .bar{ flex:1; height:2.6cqw; background:var(--y); margin-left:1cqw; }
+.scr .gd .end{ position:relative; width:2.6cqw; height:20cqw; background:var(--y); }   /* 정지 지점 "]" */
+.scr .gd .end::before, .scr .gd .end::after{ content:""; position:absolute; right:0; width:4cqw; height:2.6cqw; background:var(--y); }
+.scr .gd .end::before{ top:0; } .scr .gd .end::after{ bottom:0; }
 .scr .gd.stop{ justify-content:flex-end; }
 .emb-c{ max-width:900px; margin-top:18px; }
 .emb-c ul{ margin:6px 0 0; padding-left:18px; }
 .emb-c li{ margin:3px 0; }
 @media (max-width:640px){
   .embrow{ grid-template-columns:1fr; }
-  .scr{ width:calc(50% - 4px); min-width:0; height:88px; }
+  .embrow .shots .scr{ width:min(calc(50% - 4px), 170px); }
   .embrow .shots{ width:100%; }
 }
 /* airline search */
@@ -796,7 +806,7 @@ window.BOOKLET = {
           // EMB 패드(#301–#312): 구두 anti-icing code 대신 EMB 표시 → 이 말풍선 바로 아래에 대체 교신으로 표시
           alt: { title: '**EMB pads #301–#312:** the anti-icing code is shown on the EMB instead of the voice code and read-back.', lines: [
             { who: 'PILOT',  say: '(After checking "De-icing Complete" message on EMB) We have the de-icing information / De-icing report received, (C/S).' },
-            { who: 'ICEMAN', say: '(C/S), roger, now all personnel and equipment are clear.' },
+            { who: 'ICEMAN', say: '(C/S), roger, now all personnel and equipment are clear.', screen: { lights: 'r', lines: ['DE-ICING', 'COMPLETE'], big: true } },   // screen: 말풍선 옆 EMB 화면 그림
           ]} },
         { who: 'PILOT',  say: '(Read back), (C/S).' },
       ], info: 'Type I only: "holdover time does not apply". On request the Iceman adds details, e.g. "Kilfrost DF Plus at 50%, started at 1340".' },
@@ -830,7 +840,7 @@ window.BOOKLET = {
           // EMB 패드(#301–#312): 구두 anti-icing code 대신 EMB 표시 → 이 말풍선 바로 아래에 대체 교신으로 표시
           alt: { title: '**EMB pads #301–#312:** the anti-icing code is shown on the EMB instead of the voice code and read-back.', lines: [
             { who: 'PILOT',  say: '(After checking "De-icing Complete" message on EMB) We have the de-icing information / De-icing report received, (C/S).' },
-            { who: 'ICEMAN', say: '(C/S), roger, now all personnel and equipment are clear.' },
+            { who: 'ICEMAN', say: '(C/S), roger, now all personnel and equipment are clear.', screen: { lights: 'r', lines: ['DE-ICING', 'COMPLETE'], big: true } },   // screen: 말풍선 옆 EMB 화면 그림
           ]} },
         { who: 'PILOT',  say: '(Read back), (C/S).' },
       ], info: 'Type I only: "holdover time does not apply". On request the Iceman adds details, e.g. "Kilfrost DF Plus at 50%, started at 1340".' },
@@ -1021,15 +1031,17 @@ window.BOOKLET = {
       embScreens() + '</div>';
 
   /* ---------- EMB 화면 설명: 화면 그림(HTML) 2개 + 설명, 아래 주의사항 ---------- */
+  // EMB 화면 그림 하나 (EMB 메뉴 설명과 교신 화면에서 같이 씀)
+  function embShot(s){
+    var plane = '<svg class="pl" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 13.2v-2.4l8-1.6V4.5c0-.9.7-2 1.5-2s1.5 1.1 1.5 2v4.7l8 1.6v2.4l-8-1v4.3l2.5 1.9V20l-4-1-4 1v-1.6L10 16.5v-4.3z" transform="rotate(90 12 12)" fill="currentColor"/></svg>';
+    var lt = '<span class="lt ' + (s.lights === 'r' ? 'r' : 'g') + '"><i></i><i></i></span>';
+    var body = s.lines.map(function(t, i){ return '<span class="ln' + (i === 0 && s.red ? ' red' : '') + '">' + esc(t) + '</span>'; }).join('');
+    var guide = s.guide ? '<span class="gd ' + s.guide + '">' + plane + (s.guide === 'run' ? '<b class="bar"></b>' : '') + '<b class="end"></b></span>' : '';
+    return '<div class="scr n' + s.lines.length + (s.guide ? ' has-gd' : '') + '" role="img" aria-label="EMB: ' + esc(s.lines.join(' ')) + '">' + lt + '<span class="tx">' + body + '</span>' + guide + '</div>';
+  }
   function embScreens(){
     var E = C.emb || {}; if (!E.screens || !E.screens.length) return '';
-    var plane = '<svg class="pl" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 13.2v-2.4l8-1.6V4.5c0-.9.7-2 1.5-2s1.5 1.1 1.5 2v4.7l8 1.6v2.4l-8-1v4.3l2.5 1.9V20l-4-1-4 1v-1.6L10 16.5v-4.3z" transform="rotate(90 12 12)" fill="currentColor"/></svg>';
-    function shot(s){
-      var lt = '<span class="lt ' + (s.lights === 'r' ? 'r' : 'g') + '"><i></i><i></i></span>';
-      var body = s.lines.map(function(t, i){ return '<span class="ln' + (i === 0 && s.red ? ' red' : '') + '">' + esc(t) + '</span>'; }).join('');
-      var guide = s.guide ? '<span class="gd ' + s.guide + '">' + plane + (s.guide === 'run' ? '<b class="bar"></b>' : '') + '<b class="end"></b></span>' : '';
-      return '<div class="scr' + (s.small ? ' sm' : '') + (s.big ? ' bg' : '') + (s.guide ? ' has-gd' : '') + '" role="img" aria-label="EMB: ' + esc(s.lines.join(' ')) + '">' + lt + '<span class="tx">' + body + '</span>' + guide + '</div>';
-    }
+    var shot = embShot;
     return '<h3 class="emb-h">' + fmt(E.screensTitle || 'EMB Screens') + '</h3>' +
       (E.screensIntro ? '<p class="emb-intro">' + fmt(E.screensIntro) + '</p>' : '') +
       '<div class="embs">' + E.screens.map(function(r){
@@ -1208,7 +1220,9 @@ window.BOOKLET = {
       var side = r.who === 'PILOT' ? 'l' : 'r', c = 'c-' + (CLS[r.who] || 'p');
       [r.say, r.then].forEach(function(t, k){
         if (!t) return;
-        rows.push('<div class="mrow ' + side + ' ' + c + (k ? ' cont' : '') + '"><div class="msg"><span class="mwho">' + esc(r.who) + '</span><div class="say">' + say(t) + '</div></div></div>');
+        // screen: 그 말풍선 옆(빈 쪽)에 EMB 화면 그림
+        var scr = (!k && r.screen) ? embShot(r.screen) : '';
+        rows.push('<div class="mrow ' + side + ' ' + c + (k ? ' cont' : '') + (scr ? ' withscr' : '') + '">' + (side === 'r' ? scr : '') + '<div class="msg"><span class="mwho">' + esc(r.who) + '</span><div class="say">' + say(t) + '</div></div>' + (side === 'l' ? scr : '') + '</div>');
       });
       [].concat(r.caution || []).forEach(function(t){ rows.push('<div class="callout caution"><b>' + esc(U.caution) + '</b>&nbsp; ' + fmt(t) + '</div>'); });
       if (r.important) rows.push(important(r.important));
