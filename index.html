@@ -206,8 +206,13 @@ figcaption{ font-size:13px; color:var(--muted); }
 .sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
 .search .q{ width:100%; max-width:560px; font:600 clamp(24px,5vw,30px)/1.2 var(--serif); letter-spacing:.06em; padding:14px 16px; color:var(--ink);
   background:var(--surface); border:1px solid var(--divider); border-radius:2px; text-transform:uppercase; }
-.search .q::placeholder{ color:var(--muted); opacity:.8; letter-spacing:.04em; font-size:17px; font-weight:400; }
-.search .qlabel{ display:block; font:600 14px/1.4 var(--sans); color:var(--ink-2); margin:0 0 6px; }
+.search .q::placeholder{ color:transparent; }
+/* 검색 칸 안 안내: 윗줄 안내 문구 + 아랫줄 예시. 글자를 입력하면 사라짐 */
+.search .qwrap{ position:relative; max-width:560px; }
+.search .qhint{ position:absolute; left:17px; right:16px; top:50%; transform:translateY(-50%); pointer-events:none; font-family:var(--serif); color:var(--muted); line-height:1.3; }
+.search .qhint .l1{ display:block; font-size:16px; font-weight:600; color:var(--ink-2); }
+.search .qhint .l2{ display:block; font-size:14px; letter-spacing:.04em; margin-top:2px; }
+.search .q:not(:placeholder-shown) + .qhint{ display:none; }
 .search .q:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
 .hits{ display:grid; gap:12px; }
 /* 검색 결과 카드: 항공사 이름 → Incheon De-icing 주파수 → 조업사 목록 (넓은 화면은 주파수를 이름 오른쪽에) */
@@ -442,8 +447,8 @@ window.BOOKLET = {
   airlineSearch: {
     kicker: 'Find Your Frequency',
     title: 'Incheon De-icing Frequency by Airline',
-    label: 'Enter your airline code (2 or 3 letters)',   // 검색 칸 바로 위 안내 문구
-    placeholder: 'KE · KAL · OZ · AAR',               // 검색 칸 안의 예시 (작은 글씨)
+    label: 'Enter your airline code (2 or 3 letters)',   // 검색 칸 안 윗줄 안내 문구
+    placeholder: 'KE · KAL · OZ · AAR',               // 검색 칸 안 아랫줄 예시 (작은 글씨)
     hint: 'Search by airline code: 3-letter ICAO (KAL) or 2-letter IATA (KE).',
     invalid: 'Codes only: enter a 3-letter ICAO or 2-letter IATA code.',
     none: 'No match found. Contact Apron for your de-icing frequency.',
@@ -919,8 +924,10 @@ window.BOOKLET = {
   // Frequency 탭: 항공사 검색 · 조업사별 주파수 · 존별 주파수 표 + 지도
   $('frequency').innerHTML =
     (AS ? '<div class="sec search" style="max-width:none"><div class="kicker">' + esc(AS.kicker) + '</div><h2>' + fmt(AS.title) + '</h2>' +
-      '<label class="qlabel" for="airline-q">' + esc(AS.label || AS.title) + '</label>' +
-      '<input id="airline-q" class="q" type="search" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="3" placeholder="' + esc(AS.placeholder) + '">' +
+      '<div class="qwrap">' +
+      '<input id="airline-q" class="q" type="search" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="3" placeholder="' + esc((AS.label || AS.title) + ' ' + AS.placeholder) + '">' +
+      '<label class="qhint" for="airline-q"><span class="l1">' + esc(AS.label || AS.title) + '</span><span class="l2">' + esc(AS.placeholder) + '</span></label>' +
+      '</div>' +
       '<p class="note" id="airline-note"></p><div class="hits" id="airline-hits" aria-live="polite"></div>' +
       '<p class="note">' + fmt(AS.note) + '</p><p class="note fine">' + fmt(AS.asOf) + '</p></div>' : '') +
     '<div class="sec" style="max-width:none"><div class="kicker">' + esc(F.summaryKicker) + '</div><div class="freqs">' + freqTiles + '</div>' +
