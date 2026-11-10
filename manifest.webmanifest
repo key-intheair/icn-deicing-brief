@@ -1,0 +1,14 @@
+{
+  "name": "ICN De/Anti-icing Procedure Pilot Brief Sheet",
+  "short_name": "ICN De-icing",
+  "description": "Incheon Airport de/anti-icing procedure brief for flight crews.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f2f2",
+  "theme_color": "#0088b0",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
+<!-- 홈 화면 앱 정보 (배포할 때 publish-web.js 가 페이지 <head> 에 넣음) -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0088b0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ICN De-icing">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>ICN De/Anti-icing Procedure Pilot Brief Sheet</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -17,6 +26,7 @@
   --mag:#d6006c; --mag-strong:#aa0b56; --mag-soft:#fff1f4; --mag-line:#ffdee6;
   --on-accent:#ffffff; --spk-pilot:#201e1d; --map-bg:#ffffff;
   --ok:#2f8a57; --ok-soft:#e9f6ee; --ok-ink:#1d4d33;
+  --emb:#c99a00; --emb-soft:#fff8dc; --emb-ink:#6b5200;
   --serif:"Source Serif 4","Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,serif;
   --sans:"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
 }
@@ -25,13 +35,13 @@
   --divider:color-mix(in srgb,#ece8e7 18%,transparent); --hair:color-mix(in srgb,#ece8e7 9%,transparent);
   --accent:#4cb8e0; --accent-strong:#7fd0ef; --accent-ink:#cbeeff; --accent-soft:#0d2a36; --accent-line:#174a5e;
   --mag:#ff5d9b; --mag-strong:#ff90b1; --mag-soft:#331320; --mag-line:#5a1f37;
-  --on-accent:#0b1a20; --spk-pilot:#3a3736; --map-bg:#f4f2f2; --ok:#5cc28a; --ok-soft:#10261a; --ok-ink:#bfe8cf; color-scheme:dark; } }
+  --on-accent:#0b1a20; --spk-pilot:#3a3736; --map-bg:#f4f2f2; --ok:#5cc28a; --ok-soft:#10261a; --ok-ink:#bfe8cf; --emb:#d8b23a; --emb-soft:#2e2610; --emb-ink:#f0d98a; color-scheme:dark; } }
 :root[data-theme="dark"]{
   --bg:#171615; --paper:#1f1d1c; --surface:#2a2827; --ink:#ece8e7; --ink-2:#c9c4c3; --muted:#9b9797;
   --divider:color-mix(in srgb,#ece8e7 18%,transparent); --hair:color-mix(in srgb,#ece8e7 9%,transparent);
   --accent:#4cb8e0; --accent-strong:#7fd0ef; --accent-ink:#cbeeff; --accent-soft:#0d2a36; --accent-line:#174a5e;
   --mag:#ff5d9b; --mag-strong:#ff90b1; --mag-soft:#331320; --mag-line:#5a1f37;
-  --on-accent:#0b1a20; --spk-pilot:#3a3736; --map-bg:#f4f2f2; --ok:#5cc28a; --ok-soft:#10261a; --ok-ink:#bfe8cf; color-scheme:dark; }
+  --on-accent:#0b1a20; --spk-pilot:#3a3736; --map-bg:#f4f2f2; --ok:#5cc28a; --ok-soft:#10261a; --ok-ink:#bfe8cf; --emb:#d8b23a; --emb-soft:#2e2610; --emb-ink:#f0d98a; color-scheme:dark; }
 
 *,*::before,*::after{ box-sizing:border-box; }
 body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--serif); font-size:16px; line-height:1.6;
@@ -186,8 +196,8 @@ figcaption{ font-size:13px; color:var(--muted); }
 @media (max-width:640px){ .msg{ max-width:88%; } }
 .cs{ font-style:italic; color:var(--muted); }   /* (C/S) → call sign */
 /* 대체 교신 상자 (EMB 패드 등): 점선 테두리 + 연한 바탕 */
-.alt{ display:flex; flex-direction:column; gap:8px; border:1px dashed var(--accent); border-radius:6px; padding:10px 12px 12px; background:color-mix(in srgb, var(--accent) 7%, transparent); }
-.alt-h{ font-size:13.5px; color:var(--ink-2); line-height:1.45; }
+.alt{ display:flex; flex-direction:column; gap:8px; border:1px dashed var(--emb); border-radius:6px; padding:10px 12px 12px; background:var(--emb-soft); }   /* EMB 박스: 노란빛 */
+.alt-h{ font-size:13.5px; color:var(--emb-ink); line-height:1.45; }
 
 /* contact */
 /* airline search */
@@ -1179,5 +1189,60 @@ window.BOOKLET = {
 })();
 </script>
 
+<!-- 오프라인 저장 + 홈 화면 추가 안내 (배포할 때 publish-web.js 가 페이지 끝에 넣음) -->
+<style>
+#a2hs{ position:fixed; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); z-index:50; display:flex; align-items:center; gap:10px;
+  max-width:560px; margin:0 auto; padding:10px 10px 10px 14px; background:var(--paper); color:var(--ink); border:1px solid var(--divider);
+  border-left:4px solid var(--accent); border-radius:6px; box-shadow:0 6px 24px rgba(0,0,0,.18); font:14px/1.45 var(--sans); }
+#a2hs[hidden]{ display:none; }
+#a2hs .t{ flex:1; min-width:0; }
+#a2hs b{ font-weight:700; }
+#a2hs .ios-share{ display:inline-block; width:15px; height:17px; vertical-align:-3px; margin:0 1px; }
+#a2hs button{ font:inherit; border-radius:4px; cursor:pointer; }
+#a2hs .go{ background:var(--accent); color:var(--on-accent); border:0; padding:7px 12px; font-weight:700; white-space:nowrap; }
+#a2hs .x{ background:none; border:0; color:var(--muted); font-size:20px; line-height:1; padding:4px 6px; }
+@media print{ #a2hs{ display:none !important; } }
+</style>
+<div id="a2hs" hidden role="dialog" aria-label="Add to Home Screen">
+  <div class="t"></div>
+  <button class="go" type="button" hidden>Install</button>
+  <button class="x" type="button" aria-label="Close">&times;</button>
+</div>
+<script>
+(function(){
+  // 배포 주소(https)와 내 컴퓨터 시험(localhost)에서만 동작. 파일로 열면(file://) 아무것도 하지 않음
+  if (!('serviceWorker' in navigator) || !(location.protocol === 'https:' || location.hostname === 'localhost')) return;
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+
+  var KEY = 'icn-a2hs-closed', box = document.getElementById('a2hs'), txt = box.querySelector('.t'), go = box.querySelector('.go');
+  var closed = false; try { closed = !!localStorage.getItem(KEY); } catch (e) {}
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
+  if (closed || standalone) return;
+  function close(){ box.hidden = true; try { localStorage.setItem(KEY, '1'); } catch (e) {} }
+  box.querySelector('.x').addEventListener('click', close);
+
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (ios) {
+    var share = '<svg class="ios-share" viewBox="0 0 15 17" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7.5 1v10M4 4.5 7.5 1 11 4.5M3 7H1.5v9h12V7H12"/></svg>';
+    txt.innerHTML = '<b>Use offline:</b> tap ' + share + ' <b>Share</b>, then <b>Add to Home Screen</b>.';
+    setTimeout(function(){ box.hidden = false; }, 1500);
+    return;
+  }
+  // Android Chrome 등: 브라우저가 설치 가능하다고 알려 줄 때만 버튼 표시
+  var deferred = null;
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault(); deferred = e;
+    txt.innerHTML = '<b>Install this brief</b> on your home screen &mdash; it also works offline.';
+    go.hidden = false; box.hidden = false;
+  });
+  go.addEventListener('click', function(){
+    if (!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.then(function(){ deferred = null; close(); });
+  });
+  window.addEventListener('appinstalled', close);
+})();
+</script>
 </body>
 </html>
