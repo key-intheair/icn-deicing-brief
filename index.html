@@ -644,7 +644,7 @@ window.BOOKLET = {
     titleSub: 'Electronic Message Board',
     bullets: [
       'Pads **#301–#312** are entered via holding bays **#321–#332**. If the pad is occupied, wait in the holding bay.',
-      'The EMB at #301–#312 is in **full operation from the 2026–27 season**. It shows stopping distance (e.g. "3m / STOP"), work status (DEICING START · IN PROGRESS · COMPLETE), Apron/Delivery frequencies and, after completion, the anti-icing code (OAT · Type · HOT).',
+      'The EMB at #301–#312 is in **full operation from the 2026–27 season**. It shows the **remaining distance** while you taxi in, the **de-icing status** during treatment, and the **anti-icing code (de-icing report)** when complete.',
     ],
     diagramTower: 'RG',
     diagramLegend: 'Top: holding bays #321–#332 · Bottom: de-icing pads #301–#312',
@@ -669,7 +669,7 @@ window.BOOKLET = {
           title: 'Distance to stop',
           text: 'Remaining distance is shown from 40 m (1 m steps, then 0.1 m from 3 m). A red arrow means you are off the centre line. At **STOP**, check the position with the pilot stop line and stop lights. Overrun of more than 1 m shows **TOO-FAR**.' },
         { shots: [ { lights: 'r', lines: ['STOP', 'DEICING', 'START'], red: true }, { lights: 'r', lines: ['STOP', 'DEICING', 'IN PROGRESS'], red: true } ],
-          title: 'De-icing in progress',
+          title: '',
           text: '**DEICING START** is shown once all de-icing equipment is on the pad, then **DEICING IN PROGRESS** until spraying is complete.' },
         { shots: [ { lights: 'r', lines: ['TYPE 1  KILFROST', 'DF +     30 %', 'SPRAY START', '15:43'], small: true }, { lights: 'r', lines: ['TYPE 4  KILFROST', 'ABC-S+   100 %', 'HOT START', '15:55'], small: true } ],
           title: 'Fluid information',
@@ -682,8 +682,8 @@ window.BOOKLET = {
       cautions: [
         'The EMB is a visual aid. The **pilot stop line and stop lights take priority**.',
         'Stop at the pilot stop line and stop lights if the EMB is inoperative, or shows **HOLD ABEAM PILOT\'s STOP LINE** or **ERR** (then follow the controller).',
-        'If the aircraft type or pad number on the EMB is wrong (**ID-FAIL**), stop immediately and tell the controller.',
-        'From about 10 m before the stop point, slow down so you can stop at once. **SLOW** means you are too fast.',
+        'If the aircraft type or pad number on the EMB is wrong (**ID-FAIL**), stop immediately and report.',
+        'From about 10 m before the stop point, slow down. **SLOW** means you are too fast.',
       ],
     },
   },
