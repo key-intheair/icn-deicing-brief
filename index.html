@@ -49,6 +49,8 @@ body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--serif)
 .wrap{ max-width:1080px; margin:0 auto; padding-block:28px 72px;
   padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px)); }
 a{ color:var(--accent-strong); text-underline-offset:3px; }
+a.golink{ font-weight:700; text-decoration:underline; text-decoration-thickness:1.5px; text-underline-offset:3px; }
+a.golink::after{ content:"\2197"; font-size:.8em; margin-left:2px; text-decoration:none; display:inline-block; }
 :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
 h1,h2,h3{ font-weight:600; letter-spacing:-.015em; line-height:1.15; margin:0; text-wrap:balance; }
 p{ margin:0; }
@@ -620,8 +622,8 @@ window.BOOKLET = {
     //   important : 초록 '중요' 박스 — 문장 하나 또는 ['첫째', '둘째'] 목록 (omit if none)
     phases: [
       { phase: 'Before De-icing', phaseSub: 'Preparation', steps: [
-        { title: 'Call Incheon Deicing', role: 'Pilot → Incheon Deicing',
-          action: 'When ready for pushback, call **Incheon Deicing** and request de-icing.' },
+        { title: 'Request Deicing', role: 'Pilot → Incheon Deicing',
+          action: 'When request deicing, call [[Incheon Deicing|frequency]] and request de-icing. Then when ready for pushback, call **Incheon Deicing** again.' },
         { title: 'Zone and pad assigned', role: 'Incheon Deicing',
           action: 'Incheon Deicing assigns the **de-icing zone and pad**.' },
         { title: 'Pushback and taxi to the zone', role: 'Pilot → Apron',
@@ -858,7 +860,9 @@ window.BOOKLET = {
   // **굵게** · \n = 줄바꿈 · {p} = 인쇄물에서만 줄바꿈 (웹에서는 무시)
   // !!색상 강조!! = 분홍 굵은 글씨
   // (C/S) = 이탤릭 · 연한 색 'call sign'
-  var fmt = function(s){ return esc(s).replace(/\(C\/S\)/g,'<i class="cs">call sign</i>').replace(/!!([\s\S]+?)!!/g, '<b class="hl">$1</b>').replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>').replace(/\{p\}/g, '').replace(/\n/g, '<br>'); };
+  // [[글자|frequency]] = 누르면 해당 메뉴(탭)로 이동하는 링크 (인쇄물에서는 굵은 글씨)
+  var fmt = function(s){ return esc(s).replace(/\(C\/S\)/g,'<i class="cs">call sign</i>').replace(/!!([\s\S]+?)!!/g, '<b class="hl">$1</b>').replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>').replace(/\{p\}/g, '').replace(/\n/g, '<br>')
+    .replace(/\[\[([\s\S]+?)\|([a-z]+)\]\]/g, function(m, t, id){ return '<a class="golink" href="#' + id + '" data-go="' + id + '">' + t + '</a>'; }); };
   var say = function(s){ return fmt(s).replace(/\[([A-Z][A-Z ]+)\]/g, '<span class="cue">[$1]</span>'); };
   var li = function(arr){ return (arr || []).map(function(x){ return '<li>' + fmt(x) + '</li>'; }).join(''); };
   // 초록 '중요' 박스: 문장 하나 또는 목록 → 한 상자 안에 줄마다
@@ -1155,6 +1159,15 @@ window.BOOKLET = {
     try { localStorage.setItem('icn-booklet-tab', id); } catch (e) {}
   }
   IDS.forEach(function(x){ $('t-' + x).addEventListener('click', function(){ show(x, true); }); });
+  // 본문 안의 메뉴 링크 ([[글자|frequency]]): 해당 탭을 열고 메뉴 위치로 스크롤
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[data-go]'); if (!a) return;
+    e.preventDefault();
+    var id = ALIAS[a.dataset.go] || a.dataset.go;
+    show(id, true);
+    $('tablist').scrollIntoView({ block: 'start', behavior: 'smooth' });
+    $('t-' + id).focus({ preventScroll: true });
+  });
   $('tablist').addEventListener('keydown', function(e){
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     var i = IDS.indexOf(document.activeElement.id.replace('t-',''));
