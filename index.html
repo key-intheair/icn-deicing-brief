@@ -183,14 +183,14 @@ figcaption{ font-size:13px; color:var(--muted); }
 .scene .who{ font-size:14px; color:var(--muted); font-style:italic; }
 /* 대화형 교신: PILOT 왼쪽, PAD CONTROL · ICEMAN 오른쪽 */
 .c-p{ --c:var(--ink-2); } .c-d{ --c:var(--mag); } .c-i{ --c:var(--accent); } .c-x{ --c:var(--muted); }
-.conv-h{ display:flex; justify-content:space-between; gap:12px; font-family:var(--sans); font-size:11px; font-weight:700; letter-spacing:.12em; }
+.conv-h{ display:flex; justify-content:space-between; gap:12px; font-family:var(--sans); font-size:13px; font-weight:700; letter-spacing:.12em; }
 .conv-h span{ color:var(--c); }
 .conv{ display:flex; flex-direction:column; gap:8px; padding:4px 0; }
 .mrow{ display:flex; }
 .mrow.r{ justify-content:flex-end; }
 .mrow.cont{ margin-top:-4px; } .mrow.cont .mwho{ display:none; }
 .msg{ max-width:80%; min-width:0; border:1px solid var(--c); border-radius:4px; padding:8px 12px 10px; background:var(--paper); }
-.mrow.l .msg{ border-left-width:3px; } .mrow.r .msg{ border-right-width:3px; }
+.mrow.l .msg{ border-left-width:5px; } .mrow.r .msg{ border-right-width:5px; }   /* 말풍선 앞머리 굵게 */
 .mwho{ display:block; font-family:var(--sans); font-size:10.5px; font-weight:700; letter-spacing:.08em; color:var(--c); margin-bottom:2px; }
 .mrow.r .mwho{ text-align:right; }
 .say{ font-size:16px; line-height:1.55; }
@@ -815,8 +815,12 @@ window.BOOKLET = {
   // ══ 인쇄물 설정 (print.html) ═══════════════════════════════
   // 접지했을 때 한 면(페이지)의 크기. 인쇄소 사양이 정해지면 여기만 바꾸세요.
   print: {
-    pageWidth: '170mm',
-    pageHeight: '240mm',
+    pageWidth: '148mm',     // 종이 크기 (A5 = 148 × 210mm)
+    pageHeight: '210mm',
+    // 배치 기준 크기: 내용은 이 크기로 배치한 뒤 종이 크기에 맞게 비율대로 축소됩니다 (170×240 → A5 약 87%).
+    // 종이를 바꿔도 줄바꿈·쪽 나눔은 그대로입니다. 지우면 종이 크기 그대로 배치합니다.
+    layoutWidth: '170mm',
+    layoutHeight: '240mm',
   },
 
   // ══ 공통 화면 문구 (여러 곳에 쓰이는 버튼 · 표 머리글 · 라벨) ═══
