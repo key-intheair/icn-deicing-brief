@@ -615,7 +615,7 @@ window.BOOKLET = {
   // ══ 03 De-icing Procedure ═════════════════════════════════
   procedure: {
     tab: 'Procedure\nFlow',
-    hint: 'ENG ON is standard. ENG OFF may apply for safety or ground-handler reasons.',
+    hint: 'ENG ON / ENG OFF de-icing may vary depending on airline and ground handler operations.',
     printKicker: 'Procedure',
     printTitle: 'De-icing Procedure',
     // 인쇄물은 2면 (1/2, 2/2). 1면에 안 들어가는 단계는 자동으로 2면으로 넘어갑니다.
@@ -687,7 +687,7 @@ window.BOOKLET = {
 
   // ══ 04–07 Phraseology ═════════════════════════════════════
   phraseology: {
-    tab: 'Phraseology',
+    tab: 'Phraseology\n(Pad in~out)',   // \n = 메뉴에서 두 줄로
     hint: 'Example: pad #834, Iceman 130.85.',
     printKicker: 'Phraseology',
     printTitle: 'Phraseology',
@@ -896,7 +896,8 @@ window.BOOKLET = {
     var v = el.dataset.b.split('.').reduce(function(o, k){ return o && o[k]; }, B);
     if (v == null) return;
     // 메뉴 이름의 \n 은 두 줄로, 다른 곳에서는 띄어쓰기로
-    if (el.classList.contains('tab')) el.innerHTML = esc(v).replace(/\n/g, '<br>');
+    //   메뉴 이름은 줄마다 끊기지 않게 (예: "De-icing"이 "De-" / "icing"으로 나뉘지 않도록)
+    if (el.classList.contains('tab')) el.innerHTML = '<span>' + String(v).split('\n').map(function(s){ return '<span style="white-space:nowrap">' + esc(s) + '</span>'; }).join('<br>') + '</span>';
     else el.textContent = String(v).replace(/\n/g, ' ');
   });
   $('tablist').setAttribute('aria-label', U.docTitle);
