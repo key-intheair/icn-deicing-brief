@@ -207,6 +207,38 @@ figcaption{ font-size:13px; color:var(--muted); }
 .alt-h{ font-size:13.5px; color:var(--emb-ink); line-height:1.45; }
 
 /* contact */
+/* EMB 화면 설명 (CD Zone 메뉴) — 화면은 실제 EMB처럼 검은 바탕 + 노란 글씨 + 왼쪽 신호등 2개 */
+.emb-h{ margin-top:30px; }
+.emb-intro{ color:var(--ink-2); margin:4px 0 6px; }
+.embs{ max-width:900px; }
+.embrow{ display:grid; grid-template-columns:auto 1fr; gap:10px 22px; align-items:center; padding:16px 0; border-top:1px solid var(--divider); }
+.embrow .shots{ display:flex; gap:8px; }
+.embrow .desc p{ margin:3px 0 0; color:var(--ink-2); line-height:1.55; }
+.embrow .dt{ font-size:16px; }
+.scr{ position:relative; width:160px; height:92px; flex:0 0 auto; background:#0a0a0a; border-radius:4px; color:#ffd21a;
+  font:700 17px/1.12 "Segoe UI","Apple SD Gothic Neo",Arial,sans-serif; letter-spacing:.02em; display:flex; align-items:center; justify-content:center; padding:4px 6px 4px 28px; text-align:center;
+  box-shadow:0 1px 3px rgba(0,0,0,.25); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+.scr .tx{ display:flex; flex-direction:column; align-items:center; white-space:pre; }
+.scr .ln.red{ color:#ff2b2b; font-size:1.35em; font-weight:600; }
+.scr.sm{ font-size:12.5px; line-height:1.2; }
+.scr.bg{ font-size:20px; }
+.scr .lt{ position:absolute; left:7px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:4px; }
+.scr .lt i{ display:block; width:15px; height:15px; border-radius:50%; background:#20a53a; }
+.scr .lt.r i{ background:#f01e23; }
+.scr.has-gd{ align-items:flex-start; padding-top:8px; }
+.scr .gd{ position:absolute; left:28px; right:10px; bottom:12px; height:22px; display:flex; align-items:center; color:#ffd21a; }
+.scr .gd .pl{ width:20px; height:20px; flex:0 0 auto; }
+.scr .gd .bar{ flex:1; height:4px; background:#ffd21a; margin-left:2px; }
+.scr .gd .end{ width:5px; height:22px; background:#ffd21a; border-radius:1px; }
+.scr .gd.stop{ justify-content:flex-end; }
+.emb-c{ max-width:900px; margin-top:18px; }
+.emb-c ul{ margin:6px 0 0; padding-left:18px; }
+.emb-c li{ margin:3px 0; }
+@media (max-width:640px){
+  .embrow{ grid-template-columns:1fr; }
+  .scr{ width:calc(50% - 4px); min-width:0; height:88px; }
+  .embrow .shots{ width:100%; }
+}
 /* airline search */
 .sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
 .search .q{ width:100%; max-width:560px; font:600 clamp(24px,5vw,30px)/1.2 var(--serif); letter-spacing:.06em; padding:14px 16px; color:var(--ink);
@@ -348,6 +380,7 @@ footer{ margin-top:56px; padding-top:16px; border-top:1px solid var(--divider); 
  *  - 줄바꿈은 자동입니다. 원하는 곳에서 바꾸려면:
  *      \n   → 웹·인쇄물 모두 줄바꿈        예: 'Contact Apron\nfor pushback.'
  *      {p}  → 인쇄물에서만 줄바꿈 (웹은 그대로) 예: 'Stop and report {p}parking brake set'
+ *  - {print}글{/print} → 인쇄물에만 나오는 글 (웹에서는 숨김)
  *  - 수정 후 터미널에서 `node check.js` 를 실행하면 오류를 알려 줍니다.
  */
 window.BOOKLET = {
@@ -597,7 +630,7 @@ window.BOOKLET = {
   cdZone: {
     tab: 'Smart De-icing\nEMB',
     kicker: 'Central De-icing',
-    title: 'CD Zone & EMB',
+    title: 'EMB operation in CD Zone',
     titleSub: 'Electronic Message Board',
     bullets: [
       'Pads **#301–#312** are entered via holding bays **#321–#332**. If the pad is occupied, wait in the holding bay.',
@@ -613,6 +646,34 @@ window.BOOKLET = {
       title: 'Electronic Message Board (EMB)',
       items: [
         // 'First sentence about the EMB.',
+      ],
+      // ── EMB 화면 설명 (웹 EMB 메뉴 맨 아래) ──
+      //   shots: 화면 그림 2개 { lights: 'g' 초록 / 'r' 빨강, lines: [줄], red: 첫 줄 빨간 글씨, guide: 'run' 접근 / 'stop' 정지 }
+      screensTitle: 'EMB Screens',
+      screensIntro: 'Lights on the left: **two green = GO**, **two red = STOP**.',
+      screens: [
+        { shots: [ { lights: 'g', lines: ['A333', '311'] }, { lights: 'g', lines: ['KE001', '311'] } ],
+          title: 'Docking preparation',
+          text: 'Aircraft type and call sign are shown in turn on the upper line, with the pad number below.' },
+        { shots: [ { lights: 'g', lines: ['30m'], guide: 'run' }, { lights: 'r', lines: ['STOP'], red: true, guide: 'stop' } ],
+          title: 'Distance to stop',
+          text: 'Remaining distance is shown from 40 m (1 m steps, then 0.1 m from 3 m). A red arrow means you are off the centre line. At **STOP**, check the position with the pilot stop line and stop lights. Overrun of more than 1 m shows **TOO-FAR**.' },
+        { shots: [ { lights: 'r', lines: ['STOP', 'DEICING', 'START'], red: true }, { lights: 'r', lines: ['STOP', 'DEICING', 'IN PROGRESS'], red: true } ],
+          title: 'De-icing in progress',
+          text: '**DEICING START** is shown once all de-icing equipment is on the pad, then **DEICING IN PROGRESS** until spraying is complete.' },
+        { shots: [ { lights: 'r', lines: ['TYPE 1  KILFROST', 'DF +     30 %', 'SPRAY START', '15:43'], small: true }, { lights: 'r', lines: ['TYPE 4  KILFROST', 'ABC-S+   100 %', 'HOT START', '15:55'], small: true } ],
+          title: 'Fluid information',
+          text: 'Fluid type, brand and mix ratio, with the spray start time (Type I) or the holdover start time (Type IV).' },
+        { shots: [ { lights: 'r', lines: ['POST DE-ICING', 'CHECK', 'COMPLETE'] }, { lights: 'r', lines: ['DE-ICING', 'COMPLETE'], big: true } ],
+          title: 'De-icing complete',
+          text: 'Shown after all equipment has left the pad. The fluid information stays on the EMB. Do not leave the pad until the stop lights are off and you are cleared.' },
+      ],
+      cautionTitle: 'Notes for EMB use',
+      cautions: [
+        'The EMB is a visual aid. The **pilot stop line and stop lights take priority**.',
+        'Stop at the pilot stop line and stop lights if the EMB is inoperative, or shows **HOLD ABEAM PILOT\'s STOP LINE** or **ERR** (then follow the controller).',
+        'If the aircraft type or pad number on the EMB is wrong (**ID-FAIL**), stop immediately and tell the controller.',
+        'From about 10 m before the stop point, slow down so you can stop at once. **SLOW** means you are too fast.',
       ],
     },
   },
@@ -636,7 +697,7 @@ window.BOOKLET = {
     phases: [
       { phase: 'Before De-icing', phaseSub: 'Preparation', steps: [
         { title: 'Request de-icing', role: 'Pilot → Incheon De-icing',
-          action: 'Incheon De-icing frequencies are assigned by **de-icing zone/pad** and by **de-icing ground handler**. When ready for pushback, contact **Incheon De-icing**.',
+          action: '{print}"**Incheon De-icing**" from Apron Control will assign the de-icing zone/pad. {/print}When ready for pushback, contact **Incheon De-icing**. There are two frequencies for Incheon De-icing, and they are assigned by **de-icing zone/pad** and by **de-icing ground handler**.',
           link: { text: 'Check your Incheon De-icing frequency', to: 'frequency', print: 'Incheon De-icing frequencies: see p.{p}' } },
         { title: 'Zone and pad assigned', role: 'Incheon De-icing',
           action: 'Incheon De-icing assigns the **de-icing zone and pad**.' },
@@ -709,6 +770,7 @@ window.BOOKLET = {
     //   important : 초록 '중요' 박스 — 문장 하나 또는 목록
     //   alt     : (교신 한 줄에) 그 말풍선 아래 대체 교신 상자 — { title, lines: [...] }
     //   caution : (교신 한 줄에) 그 말풍선 바로 아래 CAUTION 상자
+    //   note    : (교신 한 줄에) 그 말풍선 바로 아래 회색 참고 문구
     on: [
       { title: '① Approaching the pad', between: 'Pad Control ↔ Flight Crew', lines: [
         { who: 'PILOT', say: 'Pad control (Apron), (C/S), approaching de-icing pad #834.' },
@@ -720,12 +782,13 @@ window.BOOKLET = {
       { title: '② Request and treatment check', between: 'Flight Crew ↔ ICEMAN', lines: [
         { who: 'PILOT',  say: 'ICEMAN, (C/S), de-icing pad #834, parking brake set, request ENG ON de-icing.' },
         { who: 'ICEMAN', say: '(C/S), ICEMAN, roger, ENG ON de-icing, engine set to ground idle, report ready for de-icing.' },
-        { who: 'PILOT',  say: 'Engine set to ground idle and report ready for de-icing, (C/S).' },
+        { who: 'PILOT',  say: 'Engine set to ground idle and report ready for de-icing, (C/S).',
+          note: 'The stop position may be adjusted to the stop line. If ENG ON is not possible, ENG OFF applies.' },
         { who: 'PILOT',  say: 'ICEMAN, (C/S), now ready for de-icing. Request Type I & Type IV, wings and tail de-icing.' },
         { who: 'ICEMAN', say: '(C/S), roger, Type I & Type IV, wings and tail de-icing.' },
         { who: 'ICEMAN', say: '(C/S), Standby (to de-ice).', then: '(C/S), de-icing starts now, contact Delivery 121.6 (or obtain clearance via PDC), monitor ICEMAN frequency.',
           important: ['A PDC request must include **ENG ON de-icing** and the de-icing status (**de-icing started**); otherwise the PDC is not issued.', 'With a valid PDC, no voice contact with Delivery is needed.'] },
-      ], note: 'The stop position may be adjusted to the stop line. If ENG ON is not possible, ENG OFF applies.' },
+      ]},
       { title: '③ Completion and anti-icing code', between: 'Flight Crew ↔ ICEMAN', lines: [
         { who: 'ICEMAN', say: '(C/S), ICEMAN, De-icing complete, advise when ready for information.' },
         { who: 'PILOT',  say: 'We are ready for information, (C/S).' },
@@ -878,7 +941,8 @@ window.BOOKLET = {
   // !!색상 강조!! = 분홍 굵은 글씨
   // (C/S) = 이탤릭 · 연한 색 'call sign'
   // [[글자|frequency]] = 누르면 해당 메뉴(탭)로 이동하는 링크 (인쇄물에서는 굵은 글씨)
-  var fmt = function(s){ return esc(s).replace(/\(C\/S\)/g,'<i class="cs">call sign</i>').replace(/!!([\s\S]+?)!!/g, '<b class="hl">$1</b>').replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>').replace(/\{p\}/g, '').replace(/\n/g, '<br>')
+  // {print}…{/print} = 인쇄물에만 나오는 글 (웹에서는 숨김)
+  var fmt = function(s){ return esc(String(s == null ? '' : s).replace(/\{print\}[\s\S]*?\{\/print\}\s*/g, '')).replace(/\(C\/S\)/g,'<i class="cs">call sign</i>').replace(/!!([\s\S]+?)!!/g, '<b class="hl">$1</b>').replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>').replace(/\{p\}/g, '').replace(/\n/g, '<br>')
     .replace(/\[\[([\s\S]+?)\|([a-z]+)\]\]/g, function(m, t, id){ return '<a class="golink" href="#' + id + '" data-go="' + id + '">' + t + '</a>'; }); };
   var say = function(s){ return fmt(s).replace(/\[([A-Z][A-Z ]+)\]/g, '<span class="cue">[$1]</span>'); };
   var li = function(arr){ return (arr || []).map(function(x){ return '<li>' + fmt(x) + '</li>'; }).join(''); };
@@ -953,7 +1017,27 @@ window.BOOKLET = {
     '<div class="sec" style="max-width:none"><div class="kicker">' + esc(C.kicker) + '</div><h2>' + fmt(C.title) + ' <span class="en">' + esc(C.titleSub) + '</span></h2>' +
       '<ul class="bul" style="max-width:760px">' + li(C.bullets) + '</ul>' +
       ((C.emb && C.emb.items && C.emb.items.length) ? '<h3>' + fmt(C.emb.title) + '</h3><ul class="bul" style="max-width:760px">' + li(C.emb.items) + '</ul>' : '') +
-      '<div class="tbl-wrap" style="border:0"><svg class="cdmap" viewBox="0 0 1000 372" role="img" aria-label="' + esc(C.diagramAlt) + '" style="min-width:640px">' + cdMap() + '</svg></div></div>';
+      '<div class="tbl-wrap" style="border:0"><svg class="cdmap" viewBox="0 0 1000 372" role="img" aria-label="' + esc(C.diagramAlt) + '" style="min-width:640px">' + cdMap() + '</svg></div>' +
+      embScreens() + '</div>';
+
+  /* ---------- EMB 화면 설명: 화면 그림(HTML) 2개 + 설명, 아래 주의사항 ---------- */
+  function embScreens(){
+    var E = C.emb || {}; if (!E.screens || !E.screens.length) return '';
+    var plane = '<svg class="pl" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 13.2v-2.4l8-1.6V4.5c0-.9.7-2 1.5-2s1.5 1.1 1.5 2v4.7l8 1.6v2.4l-8-1v4.3l2.5 1.9V20l-4-1-4 1v-1.6L10 16.5v-4.3z" transform="rotate(90 12 12)" fill="currentColor"/></svg>';
+    function shot(s){
+      var lt = '<span class="lt ' + (s.lights === 'r' ? 'r' : 'g') + '"><i></i><i></i></span>';
+      var body = s.lines.map(function(t, i){ return '<span class="ln' + (i === 0 && s.red ? ' red' : '') + '">' + esc(t) + '</span>'; }).join('');
+      var guide = s.guide ? '<span class="gd ' + s.guide + '">' + plane + (s.guide === 'run' ? '<b class="bar"></b>' : '') + '<b class="end"></b></span>' : '';
+      return '<div class="scr' + (s.small ? ' sm' : '') + (s.big ? ' bg' : '') + (s.guide ? ' has-gd' : '') + '" role="img" aria-label="EMB: ' + esc(s.lines.join(' ')) + '">' + lt + '<span class="tx">' + body + '</span>' + guide + '</div>';
+    }
+    return '<h3 class="emb-h">' + fmt(E.screensTitle || 'EMB Screens') + '</h3>' +
+      (E.screensIntro ? '<p class="emb-intro">' + fmt(E.screensIntro) + '</p>' : '') +
+      '<div class="embs">' + E.screens.map(function(r){
+        return '<div class="embrow"><div class="shots">' + r.shots.map(shot).join('') + '</div>' +
+          '<div class="desc"><b class="dt">' + fmt(r.title) + '</b><p>' + fmt(r.text) + '</p></div></div>';
+      }).join('') + '</div>' +
+      ((E.cautions && E.cautions.length) ? '<div class="callout caution emb-c"><b>' + fmt(E.cautionTitle || U.caution) + '</b><ul>' + li(E.cautions) + '</ul></div>' : '');
+  }
 
   /* ---------- 항공사 코드 → Incheon De-icing 주파수 검색 ---------- */
   if (AS) (function(){
@@ -1128,6 +1212,7 @@ window.BOOKLET = {
       });
       [].concat(r.caution || []).forEach(function(t){ rows.push('<div class="callout caution"><b>' + esc(U.caution) + '</b>&nbsp; ' + fmt(t) + '</div>'); });
       if (r.important) rows.push(important(r.important));
+      if (r.note) rows.push('<p class="note">' + fmt(r.note) + '</p>');   // 그 말풍선 바로 아래 참고 문구
       if (r.alt) rows.push('<div class="alt"><div class="alt-h">' + fmt(r.alt.title) + '</div>' + convRows(r.alt.lines).join('') + '</div>');
     });
     return rows;
