@@ -62,6 +62,10 @@ p{ margin:0; }
 .num{ font-variant-numeric:tabular-nums; }
 
 /* masthead */
+.a2hs-top{ display:flex; justify-content:flex-end; margin:-14px 0 8px; }
+.a2hs-top[hidden]{ display:none; }
+.a2hs-top button{ font:600 13px/1.2 var(--sans); color:var(--accent-strong); background:transparent; border:1px solid var(--accent-line); border-radius:999px; padding:5px 11px; cursor:pointer; }
+.a2hs-top button:active{ background:var(--accent-soft); }
 .mast{ border-top:3px solid var(--ink); padding-top:3px; }
 .mast-in{ border-top:1px solid var(--ink); display:flex; align-items:center; gap:14px; padding:12px 0; flex-wrap:wrap; }
 .brand{ font-weight:700; font-size:16px; letter-spacing:.02em; }
@@ -301,6 +305,8 @@ footer{ margin-top:56px; padding-top:16px; border-top:1px solid var(--divider); 
 <style>.printlink,#foot-print{display:none !important}</style>
 
 <div class="wrap">
+  <!-- 홈 화면에 추가 버튼: 배포한 웹(휴대폰)에서만 보임. 동작은 web-app/app-body.html -->
+  <div class="a2hs-top" id="a2hs-top" hidden><button type="button" id="a2hs-btn"><span aria-hidden="true">⊕</span> <span data-ui="addHome"></span></button></div>
   <header class="mast">
     <div class="mast-in">
       <span class="brand" data-ui="brand"></span>
@@ -318,9 +324,9 @@ footer{ margin-top:56px; padding-top:16px; border-top:1px solid var(--divider); 
 
   <nav class="tabs" role="tablist" id="tablist">
     <button class="tab" role="tab" id="t-general" aria-controls="general" data-b="general.tab"></button>
-    <button class="tab" role="tab" id="t-frequency" aria-controls="frequency" data-b="zones.tab"></button>
-    <button class="tab" role="tab" id="t-phraseology" aria-controls="phraseology" data-b="phraseology.tab"></button>
     <button class="tab" role="tab" id="t-procedure" aria-controls="procedure" data-b="procedure.tab"></button>
+    <button class="tab" role="tab" id="t-phraseology" aria-controls="phraseology" data-b="phraseology.tab"></button>
+    <button class="tab" role="tab" id="t-frequency" aria-controls="frequency" data-b="zones.tab"></button>
     <button class="tab" role="tab" id="t-emb" aria-controls="emb" data-b="cdZone.tab"></button>
     <button class="tab" role="tab" id="t-safety" aria-controls="safety" data-b="safety.tab"></button>
   </nav>
@@ -862,7 +868,7 @@ window.BOOKLET = {
     kicker: 'Key Points',
     title: 'Safety Key Points',
     printKicker: 'Key Points',
-    printTitle: 'Safety & Contact',
+    printTitle: 'Notice',
     points: [
       'Keep engine thrust at **ground idle or below** on the de-icing pad.',
       'For ENG OFF de-icing, **do not shut down engines until instructed by the Iceman.**',
@@ -910,6 +916,7 @@ window.BOOKLET = {
     printTitle: 'ICN De/Anti-icing Procedure Pilot Brief Sheet (26-27)',
     brand: 'Incheon Int\'l Airport · RKSI',
     brandSub: 'Pilot Brief Sheet',
+    addHome: 'Add to Home Screen',   // 웹 맨 위 '홈 화면에 추가' 버튼 (휴대폰에서만)
     printLink: 'Print version',
     loadError: 'content.js could not be loaded. Run node check.js in the terminal to find the error.',
     modeLabel: 'Operation',
@@ -1269,7 +1276,7 @@ window.BOOKLET = {
   document.querySelectorAll('[data-mode]').forEach(function(b){ b.addEventListener('click', function(){ setMode(b.dataset.mode); }); });
 
   /* ---------- Tabs ---------- */
-  var IDS = ['general','frequency','phraseology','procedure','emb','safety'];
+  var IDS = ['general','procedure','phraseology','frequency','emb','safety'];   // 메뉴 순서 (위 버튼 순서와 같게)
   var ALIAS = { zones: 'frequency' };   // 예전 #zones 링크는 Frequency 로
   function show(id, push){
     if (IDS.indexOf(id) < 0) id = 'general';
@@ -1352,31 +1359,48 @@ window.BOOKLET = {
   var KEY = 'icn-a2hs-closed', box = document.getElementById('a2hs'), txt = box.querySelector('.t'), go = box.querySelector('.go');
   var closed = false; try { closed = !!localStorage.getItem(KEY); } catch (e) {}
   var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
-  if (closed || standalone) return;
+  if (standalone) return;   // 홈 화면 앱으로 열었으면 안내·버튼 모두 숨김
   function close(){ box.hidden = true; try { localStorage.setItem(KEY, '1'); } catch (e) {} }
   box.querySelector('.x').addEventListener('click', close);
 
   var ua = navigator.userAgent;
   var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  if (ios) {
-    var share = '<svg class="ios-share" viewBox="0 0 15 17" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7.5 1v10M4 4.5 7.5 1 11 4.5M3 7H1.5v9h12V7H12"/></svg>';
-    txt.innerHTML = '<b>Use offline:</b> tap ' + share + ' <b>Share</b>, then <b>Add to Home Screen</b>.';
-    setTimeout(function(){ box.hidden = false; }, 1500);
-    return;
-  }
-  // Android Chrome 등: 브라우저가 설치 가능하다고 알려 줄 때만 버튼 표시
+  var mobile = ios || /Android|Mobile/i.test(ua);
+  var share = '<svg class="ios-share" viewBox="0 0 15 17" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7.5 1v10M4 4.5 7.5 1 11 4.5M3 7H1.5v9h12V7H12"/></svg>';
+  var MSG = {
+    ios: '<b>Use offline:</b> tap ' + share + ' <b>Share</b>, then <b>Add to Home Screen</b>.',
+    install: '<b>Install this brief</b> on your home screen. It also works offline.',
+    android: '<b>Add to Home Screen:</b> open the browser menu <b>&#8942;</b>, then tap <b>Add to Home screen</b> (or <b>Install app</b>).'
+  };
+  function show(html, withGo){ txt.innerHTML = html; go.hidden = !withGo; box.hidden = false; }
+
+  // 맨 위 '홈 화면에 추가' 버튼: 휴대폰에서 항상 표시 (예전에 안내를 닫았거나 앱을 지웠어도 다시 추가 가능)
+  var top = document.getElementById('a2hs-top'), topBtn = document.getElementById('a2hs-btn');
   var deferred = null;
+  if (top && mobile) {
+    top.hidden = false;
+    topBtn.addEventListener('click', function(){
+      var help = function(){ show(ios ? MSG.ios : MSG.android, false); };
+      if (ios || !deferred) return help();
+      // 설치 팝업을 띄울 수 있으면 띄우고, 안 되면 안내 문구로
+      try { Promise.resolve(deferred.prompt()).then(function(){ return deferred.userChoice; }).then(function(){ deferred = null; }, help); }
+      catch (e) { help(); }
+    });
+  }
+
+  // 처음 접속 때 아래쪽 안내 바 (닫으면 다시 자동으로 뜨지 않음)
+  if (ios) { if (!closed) setTimeout(function(){ show(MSG.ios, false); }, 1500); }
+  // Android Chrome 등: 브라우저가 설치 가능하다고 알려 줄 때 저장해 두고, 위 버튼이나 아래 바에서 사용
   window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault(); deferred = e;
-    txt.innerHTML = '<b>Install this brief</b> on your home screen &mdash; it also works offline.';
-    go.hidden = false; box.hidden = false;
+    if (!closed) show(MSG.install, true);
   });
   go.addEventListener('click', function(){
     if (!deferred) return;
     deferred.prompt();
     deferred.userChoice.then(function(){ deferred = null; close(); });
   });
-  window.addEventListener('appinstalled', close);
+  window.addEventListener('appinstalled', function(){ close(); if (top) top.hidden = true; });
 })();
 </script>
 </body>
