@@ -2,7 +2,7 @@
 //   페이지: 인터넷이 되면 항상 새로 받아 저장, 안 되면 저장해 둔 사본을 보여 줌.
 //   아이콘·앱 정보: 저장해 둔 것을 먼저 사용.
 //   VERSION 은 배포할 때 publish-web.js 가 자동으로 바꿉니다.
-const VERSION = '56dd14f5d7';
+const VERSION = '70786875cc';
 const CACHE = 'icn-deicing-' + VERSION;
 const PAGE = './';
 const FILES = [PAGE, './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
