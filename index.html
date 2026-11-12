@@ -438,7 +438,13 @@ window.BOOKLET = {
     kicker: 'Contents',
     title: 'Contents',
     // 인쇄 2쪽 아래 안내 ({url} = 웹 주소, PDF에서 누르면 열리는 링크)
-    webNote: 'This file is a separate edition made for printing. For the latest version, please visit the address below.\n{url}',
+    webNote: 'This is the print version of Pilot Brief Sheet. For the latest version, please use the **Mobile Pilot Brief Sheet** at the address below.\n{url}',
+    // 주소 아래 작은 안내: 홈 화면에 추가하는 방법 (줄마다 하나)
+    webHowTitle: 'Add it to your home screen (also works offline):',
+    webHow: [
+      '**iPhone (Safari):** tap Share, then **Add to Home Screen**.',
+      '**Android (Chrome):** tap the menu ⋮, then **Add to Home screen** (or **Install app**).',
+    ],
     webUrl: 'https://icn-deicing-brief.pages.dev',
     note: 'Frequencies and pads may change with operational conditions.',   // 인쇄 4쪽 표 아래에 표시 (목차 쪽에서는 뺌)
   },
@@ -828,7 +834,7 @@ window.BOOKLET = {
       { title: '③ Completion and anti-icing code', between: 'Flight Crew ↔ ICEMAN', lines: [
         { who: 'ICEMAN', say: '(C/S), ICEMAN, De-icing complete, advise when ready for information.' },
         { who: 'PILOT',  say: 'We are ready for information, (C/S).' },
-        { who: 'ICEMAN', say: '(C/S), De-icing complete, de-iced with Type I, anti-iced with Type IV Kilfrost ABC-S Plus at 100%. Holdover started at 1335 local time, post de-icing check completed, all personnel and equipment are clear of the aircraft.',
+        { who: 'ICEMAN', say: '(C/S), De-icing complete, de-iced with Type I, anti-iced with Type IV Kilfrost ABC-S Plus at 100%. Holdover time started at 1335 local time, post de-icing check completed, all personnel and equipment are clear of the aircraft.',
           // EMB 패드(#301–#312): 구두 anti-icing code 대신 EMB 표시 → 이 말풍선 바로 아래에 대체 교신으로 표시
           alt: { title: '**EMB pads #301–#312:** the anti-icing code is shown on the EMB instead of the voice code and read-back.', lines: [
             { who: 'PILOT',  say: '(After checking "De-icing Complete" message on EMB) We have the de-icing information / De-icing report received, (C/S).' },
@@ -861,7 +867,7 @@ window.BOOKLET = {
       { title: '③ Completion and anti-icing code', between: 'Flight Crew ↔ ICEMAN', lines: [
         { who: 'ICEMAN', say: '(C/S), ICEMAN, De-icing complete, advise when ready for information.' },
         { who: 'PILOT',  say: 'We are ready for information, (C/S).' },
-        { who: 'ICEMAN', say: '(C/S), De-icing complete, de-iced with Type I, anti-iced with Type IV Kilfrost ABC-S Plus at 100%. Holdover started at 1335 local time, post de-icing check completed, all personnel and equipment are clear of the aircraft.',
+        { who: 'ICEMAN', say: '(C/S), De-icing complete, de-iced with Type I, anti-iced with Type IV Kilfrost ABC-S Plus at 100%. Holdover time started at 1335 local time, post de-icing check completed, all personnel and equipment are clear of the aircraft.',
           // EMB 패드(#301–#312): 구두 anti-icing code 대신 EMB 표시 → 이 말풍선 바로 아래에 대체 교신으로 표시
           alt: { title: '**EMB pads #301–#312:** the anti-icing code is shown on the EMB instead of the voice code and read-back.', lines: [
             { who: 'PILOT',  say: '(After checking "De-icing Complete" message on EMB) We have the de-icing information / De-icing report received, (C/S).' },
