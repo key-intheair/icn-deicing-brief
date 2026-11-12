@@ -421,7 +421,7 @@ window.BOOKLET = {
     lede: '',   // 웹 제목 아래 소개 문장 (비워 두면 숨김)
     issuer: 'Incheon International Airport Corporation · Apron Control Team',
     issuerShort: 'Apron Control Team · IIAC',
-    disclaimer: 'Frequencies and figures may change with operational conditions.',
+    disclaimer: 'Frequencies and pads may change with operational conditions.',
     contactEmail: 'apron@biz.airport.kr',
   },
 
@@ -430,7 +430,7 @@ window.BOOKLET = {
   contents: {
     kicker: 'Contents',
     title: 'Contents',
-    note: 'Frequencies and figures may change with operational conditions.',
+    note: 'Frequencies and pads may change with operational conditions.',   // 인쇄 4쪽 표 아래에 표시 (목차 쪽에서는 뺌)
   },
 
   // ══ 01 General Information ════════════════════════════════
@@ -812,8 +812,7 @@ window.BOOKLET = {
         { who: 'PILOT',  say: 'Engine set to ground idle and report ready for de-icing, (C/S).',
           note: 'The stop position may be adjusted to the stop line. If ENG ON is not possible, ENG OFF applies.' },
         { who: 'PILOT',  say: 'ICEMAN, (C/S), now ready for de-icing. Request Type I & Type IV, wings and tail de-icing.' },
-        { who: 'ICEMAN', say: '(C/S), roger, Type I & Type IV, wings and tail de-icing.' },
-        { who: 'ICEMAN', say: '(C/S), Standby (to de-ice).', then: '(C/S), de-icing starts now, contact Delivery 121.6 (or obtain clearance via PDC), monitor ICEMAN frequency.',
+        { who: 'ICEMAN', say: '(C/S), roger, Type I & Type IV, wings and tail de-icing. Standby (to de-ice).', then: '(C/S), de-icing starts now, contact Delivery 121.6 (or obtain clearance via PDC), monitor ICEMAN frequency.',
           important: ['A PDC request must include **ENG ON de-icing** and the de-icing status (**de-icing started**); otherwise the PDC is not issued.', 'With a valid PDC, no voice contact with Delivery is needed.'] },
       ]},
       { title: '③ Completion and anti-icing code', between: 'Flight Crew ↔ ICEMAN', lines: [
@@ -847,8 +846,7 @@ window.BOOKLET = {
         { who: 'ICEMAN', say: '(C/S), ICEMAN, roger, ENG SHUT DOWN de-icing, shut down engines now, report ready for de-icing.' },
         { who: 'PILOT',  say: 'Shut down engines now, report ready for de-icing, (C/S).' },
         { who: 'PILOT',  say: 'ICEMAN, (C/S), now ready for de-icing. Request Type I & Type IV, wings and tail de-icing.' },
-        { who: 'ICEMAN', say: '(C/S), roger, Type I & Type IV, wings and tail de-icing.' },
-        { who: 'ICEMAN', say: '(C/S), Standby (to de-ice).', then: '(C/S), ICEMAN, de-icing starts now.' },
+        { who: 'ICEMAN', say: '(C/S), roger, Type I & Type IV, wings and tail de-icing. Standby (to de-ice).', then: '(C/S), ICEMAN, de-icing starts now.' },
       ], caution: 'DO NOT SHUT DOWN ENGINES UNTIL INSTRUCTED BY THE ICEMAN.' },
       { title: '③ Completion and anti-icing code', between: 'Flight Crew ↔ ICEMAN', lines: [
         { who: 'ICEMAN', say: '(C/S), ICEMAN, De-icing complete, advise when ready for information.' },
