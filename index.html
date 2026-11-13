@@ -225,6 +225,7 @@ figcaption{ font-size:13px; color:var(--muted); }
 /* 대체 교신 상자 (EMB 패드 등): 점선 테두리 + 연한 바탕 */
 .alt{ display:flex; flex-direction:column; gap:8px; border:1px dashed var(--emb); border-radius:6px; padding:10px 12px 12px; background:var(--emb-soft); }   /* EMB 박스: 노란빛 */
 .alt-h{ font-size:13.5px; color:var(--emb-ink); line-height:1.45; }
+.alt.std{ border-color:var(--muted); background:transparent; } .alt.std .alt-h{ color:var(--ink-2); }   /* EMB 없는 패드: 회색 점선 */
 /* 교신 말풍선 옆 EMB 화면 그림 */
 .mrow.withscr{ justify-content:space-between; align-items:center; gap:12px; }
 .mrow.withscr .scr{ width:150px; margin-left:clamp(0px, 6%, 90px); }
@@ -451,6 +452,9 @@ window.BOOKLET = {
       '**Android (Chrome):** tap the menu ⋮, then **Add to Home screen** (or **Install app**).',
     ],
     webUrl: 'https://icn-deicing-brief.pages.dev',
+    // 인쇄 2쪽: 인쇄본 내려받는 곳 ({dl} = 아래 주소, PDF에서 누르면 열림). 웹 안내가 빠진 배포용 PDF에도 나옵니다
+    dlNote: 'This print version can be downloaded from the **Incheon International Airport Corporation** website:\n{dl}',
+    dlUrl: 'https://airport.kr/regltn/co_en/12/43/download.do',
     note: 'Frequencies and pads may change with operational conditions.',   // 인쇄 4쪽 표 아래에 표시 (목차 쪽에서는 뺌)
   },
 
@@ -789,15 +793,15 @@ window.BOOKLET = {
           important: ['A PDC request must include **ENG OFF de-icing and de-icing complete**; otherwise the PDC is not issued.', 'With a valid PDC, no voice contact with Delivery is needed.'],
           notes: ['After voice clearance, return to the Iceman frequency.'] },
         { title: 'Ready to taxi', role: 'Iceman',
-          action: 'When you are ready to taxi, the Iceman instructs you to contact **Pad Control**.',
-          on: 'Report ready to taxi; the Iceman hands you over to Pad Control.',
-          off: 'After ATC clearance, request "start-up". After start-up, the Iceman hands you over to Pad Control.' },
+          action: 'When you are ready to taxi, the Iceman instructs you to contact **Pad Control/Apron**.',
+          on: 'Report ready to taxi; the Iceman hands you over to Pad Control/Apron.',
+          off: 'After ATC clearance, request "start-up". After start-up, the Iceman hands you over to Pad Control/Apron.' },
       ]},
       { phase: 'Exit', phaseSub: 'Leaving the pad', steps: [
         { title: 'Request taxi', role: 'Pilot → Pad Control',
-          action: 'Contact **Pad Control** and request taxi.' },
+          action: 'Contact **Pad Control/Apron** and request taxi.' },
         { title: 'Taxi clearance and exit', role: 'Pad Control',
-          action: 'Pad Control issues taxi instructions.',
+          action: 'Pad Control/Apron issues taxi instructions.',
           notes: ['Hold position until instructed.', 'Do not move before the STOP BAR LIGHTS are off.', 'Before moving, make a final check that all personnel and equipment are clear.'] },
       ]},
     ],
@@ -819,6 +823,7 @@ window.BOOKLET = {
     //   caution : 분홍 CAUTION 상자 — 여러 개면 ['첫째', '둘째'] 목록으로
     //   important : 초록 '중요' 박스 — 문장 하나 또는 목록
     //   alt     : (교신 한 줄에) 그 말풍선 아래 대체 교신 상자 — { title, lines: [...] }
+    //   group   : (교신 줄 대신) 말풍선 없이 상자만 — { kind: 'emb'(노란) | 'std'(회색), title, lines: [...] }
     //   caution : (교신 한 줄에) 그 말풍선 바로 아래 CAUTION 상자
     //   note    : (교신 한 줄에) 그 말풍선 바로 아래 회색 참고 문구
     on: [
@@ -840,15 +845,17 @@ window.BOOKLET = {
           important: ['A PDC request must include **ENG ON de-icing and de-icing started**; otherwise the PDC is not issued.', 'With a valid PDC, no voice contact with Delivery is needed.'] },
       ]},
       { title: '③ Completion and anti-icing code', between: 'Flight Crew ↔ ICEMAN', lines: [
-        { who: 'ICEMAN', say: '(C/S), ICEMAN, De-icing complete, advise when ready for information.' },
-        { who: 'PILOT',  say: 'We are ready for information, (C/S).' },
-        { who: 'ICEMAN', say: '(C/S), De-icing complete, de-iced with Type I, anti-iced with Type IV Kilfrost ABC-S Plus at 100%. Holdover time started at 1335 local time, post de-icing check completed, all personnel and equipment are clear of the aircraft.',
-          // EMB 패드(#301–#312): 구두 anti-icing code 대신 EMB 표시 → 이 말풍선 바로 아래에 대체 교신으로 표시
-          alt: { title: '**EMB pads #301–#312:** the anti-icing code is shown on the EMB instead of the voice code and read-back.', lines: [
+        // EMB 패드(#301–#312) 먼저, 그다음 EMB 없는 패드의 음성 교신 — group: 말풍선 없이 상자만
+        { group: { kind: 'emb', title: '**EMB pads #301–#312:** the anti-icing code is shown on the EMB instead of the voice code and read-back.', lines: [
             { who: 'PILOT',  say: '(After checking "De-icing Complete" message on EMB) We have the de-icing information / De-icing report received, (C/S).' },
             { who: 'ICEMAN', say: '(C/S), roger, now all personnel and equipment are clear.', screen: { lights: 'r', lines: ['DE-ICING', 'COMPLETE'], big: true } },   // screen: 말풍선 옆 EMB 화면 그림
-          ]} },
-        { who: 'PILOT',  say: '(Read back), (C/S).' },
+        ]} },
+        { group: { kind: 'std', title: '**Non-EMB pads:** the Iceman gives the anti-icing code by voice; read it back.', lines: [
+            { who: 'ICEMAN', say: '(C/S), ICEMAN, De-icing complete, advise when ready for information.' },
+            { who: 'PILOT',  say: 'We are ready for information, (C/S).' },
+            { who: 'ICEMAN', say: '(C/S), De-icing complete, de-iced with Type I, anti-iced with Type IV Kilfrost ABC-S Plus at 100%. Holdover time started at 1335 local time, post de-icing check completed, all personnel and equipment are clear of the aircraft.' },
+            { who: 'PILOT',  say: '(Read back), (C/S).' },
+        ]} },
       ], info: 'Type I only: "holdover time does not apply". On request the Iceman adds details, e.g. "Kilfrost DF Plus at 50%, started at 1340".' },
       { title: '④ Taxi', between: 'Flight Crew ↔ ICEMAN', lines: [
         { who: 'ICEMAN', say: '(C/S), ICEMAN, Report ready to taxi.' },
@@ -874,15 +881,17 @@ window.BOOKLET = {
         { who: 'ICEMAN', say: '(C/S), roger, Type I & Type IV, wings and tail de-icing. Standby (to de-ice).', then: '(C/S), ICEMAN, de-icing starts now.' },
       ], caution: 'DO NOT SHUT DOWN ENGINES UNTIL INSTRUCTED BY THE ICEMAN.' },
       { title: '③ Completion and anti-icing code', between: 'Flight Crew ↔ ICEMAN', lines: [
-        { who: 'ICEMAN', say: '(C/S), ICEMAN, De-icing complete, advise when ready for information.' },
-        { who: 'PILOT',  say: 'We are ready for information, (C/S).' },
-        { who: 'ICEMAN', say: '(C/S), De-icing complete, de-iced with Type I, anti-iced with Type IV Kilfrost ABC-S Plus at 100%. Holdover time started at 1335 local time, post de-icing check completed, all personnel and equipment are clear of the aircraft.',
-          // EMB 패드(#301–#312): 구두 anti-icing code 대신 EMB 표시 → 이 말풍선 바로 아래에 대체 교신으로 표시
-          alt: { title: '**EMB pads #301–#312:** the anti-icing code is shown on the EMB instead of the voice code and read-back.', lines: [
+        // EMB 패드(#301–#312) 먼저, 그다음 EMB 없는 패드의 음성 교신 — group: 말풍선 없이 상자만
+        { group: { kind: 'emb', title: '**EMB pads #301–#312:** the anti-icing code is shown on the EMB instead of the voice code and read-back.', lines: [
             { who: 'PILOT',  say: '(After checking "De-icing Complete" message on EMB) We have the de-icing information / De-icing report received, (C/S).' },
             { who: 'ICEMAN', say: '(C/S), roger, now all personnel and equipment are clear.', screen: { lights: 'r', lines: ['DE-ICING', 'COMPLETE'], big: true } },   // screen: 말풍선 옆 EMB 화면 그림
-          ]} },
-        { who: 'PILOT',  say: '(Read back), (C/S).' },
+        ]} },
+        { group: { kind: 'std', title: '**Non-EMB pads:** the Iceman gives the anti-icing code by voice; read it back.', lines: [
+            { who: 'ICEMAN', say: '(C/S), ICEMAN, De-icing complete, advise when ready for information.' },
+            { who: 'PILOT',  say: 'We are ready for information, (C/S).' },
+            { who: 'ICEMAN', say: '(C/S), De-icing complete, de-iced with Type I, anti-iced with Type IV Kilfrost ABC-S Plus at 100%. Holdover time started at 1335 local time, post de-icing check completed, all personnel and equipment are clear of the aircraft.' },
+            { who: 'PILOT',  say: '(Read back), (C/S).' },
+        ]} },
       ], info: 'Type I only: "holdover time does not apply". On request the Iceman adds details, e.g. "Kilfrost DF Plus at 50%, started at 1340".' },
       { title: '④ Clearance, start-up and taxi', between: 'Flight Crew ↔ ICEMAN', lines: [
         { who: 'ICEMAN', say: '(C/S), ICEMAN, contact Delivery 121.6 (or request PDC) and return to ICEMAN frequency.',
@@ -1266,6 +1275,7 @@ window.BOOKLET = {
   function convRows(lines){
     var rows = [];
     lines.forEach(function(r){
+      if (r.group) { rows.push('<div class="alt' + (r.group.kind === 'std' ? ' std' : '') + '"><div class="alt-h">' + fmt(r.group.title) + '</div>' + convRows(r.group.lines).join('') + '</div>'); return; }   // 말풍선 없는 상자
       var side = r.who === 'PILOT' ? 'l' : 'r', c = 'c-' + (CLS[r.who] || 'p');
       [r.say, r.then].forEach(function(t, k){
         if (!t) return;
@@ -1283,7 +1293,7 @@ window.BOOKLET = {
   function renderScenes(){
     $('scenes').innerHTML = PH[MODE].map(function(sc){
       var right = [], rows = convRows(sc.lines);
-      sc.lines.forEach(function(r){ if (r.who !== 'PILOT' && right.indexOf(r.who) < 0) right.push(r.who); });
+      (function fl(a){ return [].concat.apply([], a.map(function(r){ return r.group ? fl(r.group.lines) : [r]; })); })(sc.lines).forEach(function(r){ if (r.who !== 'PILOT' && right.indexOf(r.who) < 0) right.push(r.who); });
       var rc = right.length === 1 ? CLS[right[0]] : 'x';
       return '<article class="scene"><h3>' + esc(sc.title) + '</h3><div class="who">' + esc(sc.between) + '</div>' +
         '<div class="conv-h"><span class="c-p">' + esc(U.pilotLabel) + '</span><span class="c-' + rc + '">' + esc(right.join(' · ')) + '</span></div><div class="conv">' + rows.join('') + '</div>' +
