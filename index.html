@@ -514,10 +514,10 @@ window.BOOKLET = {
     // pads: 그 존의 패드 번호 (표의 Zone 칸에 함께 표시, \n = 줄바꿈)
     // gha: 그 존의 제방빙 계약 조업사 · 비어 있으면 '–' (deicing 도 비우면 '–')
     rows: [
-      { code: 'AS',      pads: '#821–823, 825', name: 'Alpha South',               gha: 'Sharp Aviation K',                               deicing: '123.575', apron: '121.65',  pad: '123.325' },
-      { code: 'MS',      pads: '#831–834', name: 'Mike South',                gha: 'JAS · Swissport Korea',                          deicing: '123.575', apron: '121.65',  pad: '123.325' },
-      { code: 'CD',      pads: '#301–312', name: 'Central De-icing',          gha: 'Korea Airport Service · Asiana Airport Service', deicing: '122.225', apron: '122.175', pad: '122.325' },
-      { code: 'TC',      pads: '#814–817', name: 'Terminal Center',           gha: 'Korea Airport Service',                          deicing: '122.225', apron: '122.175', pad: '122.175' },
+      { code: 'AS',      pads: '#821–823, 825', name: 'Alpha South',               gha: 'Sharp Aviation K (SHP)',                         deicing: '123.575', apron: '121.65',  pad: '123.325' },
+      { code: 'MS',      pads: '#831–834', name: 'Mike South',                gha: 'JAS · Swissport Korea (SPI)',                    deicing: '123.575', apron: '121.65',  pad: '123.325' },
+      { code: 'CD',      pads: '#301–312', name: 'Central De-icing',          gha: 'Korea Airport Service (KAS) · Asiana Airport Service (AAP)', deicing: '122.225', apron: '122.175\n121.8', pad: '122.325' },
+      { code: 'TC',      pads: '#814–817', name: 'Terminal Center',           gha: 'Korea Airport Service (KAS)',                    deicing: '122.225', apron: '122.175', pad: '–' },   // TC: Pad Control 교신 없음
       { code: 'MN',      pads: '#551–554, 557–558', name: 'Mike North',                gha: '',                                               deicing: '',        apron: '129.725', pad: '122.325' },
       { code: 'DS · DN', pads: 'DS #841–842\nDN #851–852', name: 'Delta South\nDelta North', gha: '',                                               deicing: '123.575', apron: '121.8',   pad: '123.325' },
     ],
@@ -1049,9 +1049,9 @@ window.BOOKLET = {
   /* ---------- Zones & frequencies ---------- */
   var freqTiles = F.deicing.map(function(d){
     return '<div class="freq"><span class="label">' + esc(U.deicingLabel) + '</span><span class="v num">' + esc(d.freq) + '</span><span class="who">' + (U.ghaLabel ? '<b class="gha">' + esc(U.ghaLabel) + ' :</b> ' : '') + fmt(d.handlers) + '</span></div>';
-  }).join('') + '<div class="freq m"><span class="label">' + esc(U.deliveryLabel) + '</span><span class="v num">' + esc(F.delivery) + '</span><span class="who">' + fmt(F.deliveryNote) + '</span></div>';
+  }).join('');   // Delivery 주파수 타일은 웹에서 뺌 (인쇄 4쪽 아래 상자에는 있음)
   var rows = F.rows.map(function(z){
-    return '<tr><td class="z">' + esc(z.code) + (z.pads ? '<small class="pn">' + fmt(z.pads.replace(/, /g, ',\n')) + '</small>' : '') + '<small>' + fmt(z.name) + '</small></td><td><span class="hi">' + (z.deicing ? esc(z.deicing) : '–') + '</span></td><td>' + esc(z.apron) + '</td><td>' + (z.pad ? esc(z.pad) : esc(U.padSameAsApron)) + '</td><td class="gha gha-c">' + (z.gha ? fmt(z.gha) : '–') + '</td></tr>';
+    return '<tr><td class="z">' + esc(z.code) + (z.pads ? '<small class="pn">' + fmt(z.pads.replace(/, /g, ',\n')) + '</small>' : '') + '<small>' + fmt(z.name) + '</small></td><td><span class="hi">' + (z.deicing ? esc(z.deicing) : '–') + '</span></td><td>' + esc(z.apron).replace(/\n/g, '<br>') + '</td><td>' + (z.pad ? esc(z.pad).replace(/\n/g, '<br>') : esc(U.padSameAsApron)) + '</td><td class="gha gha-c">' + (z.gha ? fmt(z.gha) : '–') + '</td></tr>';
   }).join('');
   var AS = B.airlineSearch;
   // Frequency 탭: 항공사 검색 · 조업사별 주파수 · 존별 주파수 표 + 지도
